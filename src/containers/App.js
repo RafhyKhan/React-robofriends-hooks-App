@@ -1,4 +1,5 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
+//need useEffect and useState for (react hooks)
 import CardList from '../components/CardList';
 import SearchBox from '../components//SearchBox';
 import Scroll from '../components/Scroll';
@@ -6,48 +7,54 @@ import './App.css';
 import ErrorBoundry from '../components/ErrorBoundry';
 
 
-class App extends Component {
-	constructor () {
-		super()
-		this.state = {
-			robots: [],
-			searchfield: ''	
-		}
-	}
+function App() {
+	//Dont need a constructor for (React Hooks)
+	
+	//create these lines of code, because in contructor you have robots[], and searchfield'' (React Hooks)
+	const [robots, setRobots] = useState([]) 
+	const [searchfield, setSearchfield] = useState('') 
+	const [count, setCount] = useState(0)
 
 
-	componentDidMount (){
+
+	//everytimes app render, useEffect is used, useEffect replaces componentDidMount() and other , (reacts Hookes)
+	useEffect(() => {
 		fetch('https://jsonplaceholder.typicode.com/users')
-		.then(response=> response.json())
-		.then(users => this.setState({ robots:users}));
+			.then(response=> response.json())
+			.then(users => (setRobots(users)));
+		console.log(count)
+	}, [count])
+	//run useEfeccts if this array given changes
+	//everytime count value changes, it updates this statement, used as refresh button ?
+	
+
+	const onSearchChange = (event) => {
+		setSearchfield(event.target.value)
 	}
 
-	onSearchChange = (event) => {
-		this.setState({ searchfield: event.target.value})
-	}
 
-
-	render () {
-	  const { robots, searchfield } = this.state;
-	  const  filteredRobots = robots.filter(robot => {
+	const  filteredRobots = robots.filter(robot => {
 		return robot.name.toLowerCase().includes(searchfield.toLowerCase());
-	  })
+	})
+
 	{/*creating a loading screen------since getting users from online----1sec in begining----*/}
 	{/* 0 means false, so opposite for true*/}
-	  return !robots.length ?
-	  	<h1>Loading</h1> :
-	  	  (
-			<div className ='tc'>
-			  <h1 className='f1'>RoboFriends</h1>
-			  <SearchBox searchChange={this.onSearchChange}/>
-			  <Scroll>
-			  	<ErrorBoundry>
-			  		<CardList robots={filteredRobots}/>
-			  	</ErrorBoundry>
-			  </Scroll>
-			</div>
-		  );
-	}
+	
+	return !robots.length ?
+	<h1>Loading</h1> :
+		(
+		<div className ='tc'>
+			<h1 className='f1'>RoboFriends</h1>
+			<button onClick={() => setCount(count+1)}>Click Me!</button>
+			<SearchBox searchChange={onSearchChange}/>
+			<Scroll>
+			<ErrorBoundry>
+				<CardList robots={filteredRobots}/>
+			</ErrorBoundry>
+			</Scroll>
+		</div>
+		);
 }
+
 
 export default App;
