@@ -45,7 +45,7 @@ function App() {
 		(
 		<div className ='tc'>
 			<h1 className='f1'>RoboFriends</h1>
-			<button onClick={() => setCount(count+1)}>Click Me!</button>
+			<text className='f3'>Search among the Robots! (All email address are fake)</text>
 			<SearchBox searchChange={onSearchChange}/>
 			<Scroll>
 			<ErrorBoundry>
